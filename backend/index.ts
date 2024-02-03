@@ -8,14 +8,10 @@ const AUTH = process.env.OPEN_AI_AUTH;
 
 app.use(express.text());
 
-app.get("/", (_, response) => {
-	response.send("Hello, world!");
-});
-
 app.post("/v1/post/chart", (request, response) => {
 	const query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
 
-	const code = `${request.body}`;
+	const code = request.body.toString();
 
 	const uri = "https://api.openai.com/v1/chat/completions";
 	
@@ -29,7 +25,7 @@ app.post("/v1/post/chart", (request, response) => {
 		"messages": [
 			{
 				"role": "user",
-				"content": `${query+code}`
+				"content": `${query}${code}`
 			}
 		]
 	}
