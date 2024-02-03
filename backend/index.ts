@@ -42,10 +42,16 @@ app.post("/v1/post/chart", (request, response) => {
 	})
 	.then(async(res) => {
 		const openAIResponse = res.data.choices[0].message.content;
-		const svgContent = await renderDOTToSVG(openAIResponse);
-		response
-			.type('svg')
-			.send(svgContent);
+		try {
+			const svgContent = await renderDOTToSVG(openAIResponse);
+			response
+				.type('svg')
+				.send(svgContent);
+		}
+		catch(error) {
+				console.error('Failed to fetch SVG:', error);
+				response.status(500).send('Failed to load SVG content');
+		}
 	})
 })
 
