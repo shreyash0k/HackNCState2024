@@ -1,5 +1,5 @@
 {
-	"name": "hackncstate2024",
+	"name": "codevisor",
 	"dependencies": {
 		"express": "^4.18.2"
 	},
