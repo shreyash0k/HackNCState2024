@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [],
-  templateUrl:'./header.component.html',
-  styles: ``
+	selector: "app-header",
+	standalone: true,
+	imports: [MatToolbarModule],
+	templateUrl: "./header.component.html"
 })
-export class HeaderComponent {
-
-}
+export class HeaderComponent {}

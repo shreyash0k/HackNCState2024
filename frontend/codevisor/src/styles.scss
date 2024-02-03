@@ -1,3 +1,12 @@
+body, html {
+	height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+	font-family: Roboto, sans-serif;
+	margin: 0;
+}
+
+.as-split-gutter {
+	background-color: var(--mat-toolbar-container-background-color) !important;
+}

@@ -1,19 +1,12 @@
 import { Component } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./layout/header/header.component";
-import { FooterComponent } from "./layout/footer/footer.component";
-
+import { AngularSplitModule } from "angular-split";
+import { EditorComponent } from "./editor/editor.component"
+import { HeaderComponent } from "./layout/header/header.component"
 
 @Component({
 	selector: "app-root",
 	standalone: true,
-	imports: [HeaderComponent, RouterOutlet,FooterComponent],
-	template: `
-		<app-header/>
-		<router-outlet/>
-		<app-footer/>
-	`,
-
-	styles: [],
+	imports: [AngularSplitModule, EditorComponent, HeaderComponent],
+	templateUrl: "./app.component.html"
 })
 export class AppComponent {}
