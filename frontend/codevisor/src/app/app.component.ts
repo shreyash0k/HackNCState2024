@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from "@angular/core";
+import { AngularSplitModule } from "angular-split";
+import { EditorComponent } from "./editor/editor.component"
+import { HeaderComponent } from "./layout/header/header.component"
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+	selector: "app-root",
+	standalone: true,
+	imports: [AngularSplitModule, EditorComponent, HeaderComponent],
+	templateUrl: "./app.component.html"
 })
-export class AppComponent {
-  title = 'codevisor';
-}
+export class AppComponent {}
