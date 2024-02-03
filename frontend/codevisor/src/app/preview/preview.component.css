@@ -1,0 +1,14 @@
+.card-with-margin {
+    margin: 10px;
+}
+.image-container {
+    max-height: 100vh; 
+    overflow: hidden; 
+  }
+  
+  img {
+    max-width: 100%;
+    max-height: 100vh; /* Set a maximum height to fit the viewport height */
+    height: auto;
+    width: auto;
+  }
