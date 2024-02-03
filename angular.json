@@ -63,8 +63,9 @@
 						],
 
 						"styles": [
-							"frontend/codevisor/src/styles.scss"
-						],
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "frontend/codevisor/src/styles.scss"
+            ],
 
 						"scripts": []
 					},
