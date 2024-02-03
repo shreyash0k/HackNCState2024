@@ -1,23 +1,27 @@
 import express from "express";
 import axios from "axios";
+import { renderDOTToSVG } from "./renderer";
 
 const app = express();
 const port = 3000;
+const AUTH = process.env.OPEN_AI_AUTH;
+
+app.use(express.text());
 
 app.get("/", (_, response) => {
 	response.send("Hello, world!");
 });
 
-app.post("/generate-response", (request, response) => {
+app.post("/v1/post/chart", (request, response) => {
 	const query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
 
-	const code = "console.log(\"Hello World\")";
+	const code = `${request.body}`;
 
 	const uri = "https://api.openai.com/v1/chat/completions";
-	const auth = process.env.OPEN_AI_AUTH;
+	
 	const headers = {
 		"Content-Type": "application/json",
-		"Authorization": `${auth}`
+		"Authorization": `${AUTH}`
 	}
 
 	const body = {
@@ -36,9 +40,12 @@ app.post("/generate-response", (request, response) => {
 		data: body,
 		headers
 	})
-	.then((res) => {
-		console.log(res.data.choices[0].message.content);
-		response.json(res.data.choices[0].message.content);
+	.then(async(res) => {
+		const openAIResponse = res.data.choices[0].message.content;
+		const svgContent = await renderDOTToSVG(openAIResponse);
+		response
+			.type('svg')
+			.send(svgContent);
 	})
 })
 
