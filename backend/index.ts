@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 });
 
 //need to update //PUT //get ID, code
-app.put("/v1/put/chart", (request, response) => {
+app.put("/v1/chart", (request, response) => {
 	const gpt_query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
 
 
@@ -106,7 +106,7 @@ app.put("/v1/put/chart", (request, response) => {
 });
 
 //create new project
-app.post("/v1/post/project", (request, response) => {
+app.post("/v1/projects", (request, response) => {
 	const {project_name} = request.body;
 	const project_id = crypto.randomUUID();
 	const code = "";
@@ -148,7 +148,7 @@ app.post("/v1/post/project", (request, response) => {
 });
 
 //get all projects from db
-app.get("/v1/get/projects", (_, response) => {
+app.get("/v1/projects", (_, response) => {
 
 	const fetchProjects = async() => {
 		const client = new MongoClient(mongoUrl);
