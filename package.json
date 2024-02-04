@@ -12,6 +12,8 @@
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
     "angular-split": "^17.1.1",
+    "axios": "^1.6.7",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "monaco-editor": "^0.45.0",
     "ngx-monaco-editor-v2": "^17.0.1",
