@@ -24,49 +24,85 @@ app.use(function(req, res, next) {
 });
 
 //need to update //PUT //get ID, code
-app.post("/v1/post/chart", (request, response) => {
-	const query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
+app.post("/v1/put/chart", (request, response) => {
+	const gpt_query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
 
-	const code = request.body.toString();
 
-	const uri = "https://api.openai.com/v1/chat/completions";
+	const {project_id} = request.body;
 	
-	const headers = {
-		"Content-Type": "application/json",
-		"Authorization": `${AUTH}`
-	}
+	const code = request.body.code.toString();
 
-	const body = {
-		"model": "gpt-4",
-		"messages": [
-			{
-				"role": "user",
-				"content": `${query}${code}`
+	const codeHash = crypto.createHash('sha256').update(code).digest('hex');
+
+	const checkForHash = async () => {
+		const client = new MongoClient(mongoUrl);
+		try{ 
+			await client.connect();
+			const db = client.db(mongodbName);
+			const collection = db.collection(mongoCollectionName);
+			const query = {hash : codeHash};
+			const document = await collection.findOne(query);
+			if(document&&codeHash){
+				response
+					.type('svg')
+					.send(document.chart_svg);
 			}
-		]
+			else{
+				const uri = "https://api.openai.com/v1/chat/completions";
+	
+				const headers = {
+					"Content-Type": "application/json",
+					"Authorization": `${AUTH}`
+				}
+
+				const body = {
+					"model": "gpt-4",
+					"messages": [
+						{
+							"role": "user",
+							"content": `${gpt_query}${code}`
+						}
+					]
+				}
+
+				axios({
+					method:"post",
+					url: uri,
+					data: body,
+					headers
+				})
+				.then(async(res) => {
+					const openAIResponse = res.data.choices[0].message.content;
+
+					try {
+						const svgContent = await renderDOTToSVG(formatOpenAIResponse(openAIResponse));
+
+						const filter = {project_id}
+						const updateDoc = {
+							$set: {
+								code,
+								chart_svg: svgContent,
+								hash: crypto.createHash('sha256').update(code).digest('hex')
+							}
+						};
+						
+						const updateResult = await collection.updateOne(filter,updateDoc);
+						response
+							.type('svg')
+							.send(svgContent);
+					}
+					catch(error) {
+							console.error('Failed to fetch SVG:', error);
+							response.status(500).send('Failed to load SVG content');
+					}
+				})
+			}
+		}
+		catch(error){
+			console.log(error);
+		}
 	}
-
-	axios({
-		method:"post",
-		url: uri,
-		data: body,
-		headers
-	})
-	.then(async(res) => {
-		const openAIResponse = res.data.choices[0].message.content;
-
-		try {
-			const svgContent = await renderDOTToSVG(formatOpenAIResponse(openAIResponse));
-
-			response
-				.type('svg')
-				.send(svgContent);
-		}
-		catch(error) {
-				console.error('Failed to fetch SVG:', error);
-				response.status(500).send('Failed to load SVG content');
-		}
-	})
+	checkForHash();
 });
 
 //create new project
@@ -93,7 +129,6 @@ app.post("/v1/post/project", (request, response) => {
 				hash,
 				timestamp
 			});
-			console.log(insertResult);
 			response.json({
 				project_id,
 				project_name,
@@ -123,7 +158,6 @@ app.get("/v1/get/projects", (_, response) => {
 			const collection = db.collection(mongoCollectionName);
 
 			const fetchResult = await collection.find({}).toArray();
-			console.log(fetchResult);
 			response.json({"projects": [...fetchResult]});
 		}
 		catch(error){
