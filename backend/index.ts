@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 const AUTH = process.env.OPEN_AI_AUTH;
 
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = 'mongodb+srv://test:test123@cluster0.qfbq0pk.mongodb.net/?retryWrites=true&w=majority';
 const mongodbName = 'projects_db';
 const mongoCollectionName = 'projects'
 
