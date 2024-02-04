@@ -1,1 +1,17 @@
-<ngx-monaco-editor class="monaco-editor" [options]="monacoOptions"></ngx-monaco-editor>
+<ngx-monaco-editor
+	class="monaco-editor"
+	[options]="monacoOptions"
+	(onInit)="handleInit($event)"/>
+
+<editor-import-overlay
+	class="editor-import-overlay"
+	[class.hidden]="!overlayEnabled"
+	(hide)="handleImportOverlayHide()"
+	(import)="handleImport($event)"/>
+
+<editor-file-import-button
+	class="primary-editor-file-import-button"
+	width="4rem"
+	height="4rem"
+	[class.hidden]="overlayEnabled"
+	(import)="handleImport($event)"/>

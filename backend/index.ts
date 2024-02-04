@@ -15,6 +15,14 @@ const mongoCollectionName = 'projects'
 app.use(express.text());
 app.use(express.json());
 
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 //need to update //PUT //get ID, code
 app.post("/v1/post/chart", (request, response) => {
 	const query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
@@ -46,8 +54,10 @@ app.post("/v1/post/chart", (request, response) => {
 	})
 	.then(async(res) => {
 		const openAIResponse = res.data.choices[0].message.content;
+
 		try {
-			const svgContent = await renderDOTToSVG(openAIResponse);
+			const svgContent = await renderDOTToSVG(formatOpenAIResponse(openAIResponse));
+
 			response
 				.type('svg')
 				.send(svgContent);
@@ -130,3 +140,14 @@ app.get("/v1/get/projects", (_, response) => {
 app.listen(port, () => {
 	console.log(`The server is running at http://localhost:${port}`);
 });
+
+const formatOpenAIResponse = (text:string) => {
+	let updatedText = text.trim();
+	while(updatedText.charAt(0) == "`"){
+		updatedText = updatedText.slice(1);
+	}
+	while(updatedText.charAt(updatedText.length-1) == "`"){
+		updatedText = updatedText.slice(0,-1);
+	}
+	return updatedText;
+}

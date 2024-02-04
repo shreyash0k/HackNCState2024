@@ -1,0 +1,12 @@
+:host {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	justify-content: center;
+}
+
+.editor-import-overlay-button {
+	opacity: 75%;
+	width: 5rem;
+	height: 5rem;
+}
