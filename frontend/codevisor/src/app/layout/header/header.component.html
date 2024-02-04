@@ -1,13 +1,23 @@
-<mat-toolbar color="primary">
-	<button class="toolbar-menu-icon" mat-icon-button (click)="toggleMenu.emit(null)">
-		<mat-icon>menu</mat-icon>
-	</button>
+<mat-toolbar class="toolbar" color="primary">
+	<div class="first-third">
+		<button class="toolbar-menu-icon" mat-icon-button (click)="toggleMenu.emit(null)">
+			<mat-icon>menu</mat-icon>
+		</button>
 
-	<span class="toolbar-title">CodeVisor</span>
-	<span class="toolbar-filler"></span>
-	<button
-		color="accent"
-		mat-raised-button
-		matTooltip="Generate a flowchart"
-		(click)="generate.emit(null)">Generate</button>
+		<ng-template [ngIf]="project != null">
+			<span class="toolbar-project-name">{{ project.project_name }}</span>
+		</ng-template>
+	</div>
+
+	<div class="second-third">
+		<span class="toolbar-title">CodeVisor</span>
+	</div>
+
+	<div class="third-third">
+		<button
+			color="accent"
+			mat-raised-button
+			matTooltip="Generate a flowchart"
+			(click)="generate.emit(null)">Generate</button>
+	</div>
 </mat-toolbar>

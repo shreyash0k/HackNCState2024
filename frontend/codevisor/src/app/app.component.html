@@ -1,4 +1,8 @@
-<app-header (generate)="generate()" (toggleMenu)="menuEnabled = !menuEnabled"/>
+<app-header
+	[project]="selectedProject"
+	(generate)="generate()"
+	(toggleMenu)="menuEnabled = !menuEnabled"/>
+
 <mat-sidenav-container class="menu-container">
 	<mat-sidenav class="menu" [(opened)]="menuEnabled">
 		<project-list
