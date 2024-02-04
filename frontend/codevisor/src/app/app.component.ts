@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild,inject } from "@angular/core";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { AngularSplitModule } from "angular-split";
 import { Project } from "./common/project";
@@ -6,6 +6,9 @@ import { EditorComponent } from "./editor/editor.component";
 import { HeaderComponent } from "./layout/header/header.component";
 import { PreviewComponent } from "./preview/preview.component";
 import { ProjectListComponent } from "./projectlist/projectlist.component";
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { AppServiceService } from "./app-service.service";
 
 @Component({
 	selector: "app-root",
@@ -52,7 +55,13 @@ export class AppComponent {
 	];
 
 	selectedProject: Project = this.projects[0];
+	httpClient = inject(HttpClient);
+	apiUrl = 'http://localhost:3000/v1/post/chart';
 
+
+	constructor(private appService: AppServiceService) {
+		
+	}
 	generate() {
 		if (this.editor == null) {
 			console.error("Error: The editor hasn't been registered yet.");
@@ -61,8 +70,27 @@ export class AppComponent {
 
 			if (code != null) {
 				console.log(`Code: ${code}`);
+				this.getSvgData(code);
 			}
 		}
+		//call getSvgfunction to get the svg
+		
+
+		//return that svg to the preview component
+	}
+	
+
+	getSvgData(inputCode:any){
+		this.httpClient.post<any>(this.apiUrl, inputCode, {responseType: 'text' as 'json'})
+		.subscribe((data:any)=>{
+			console.log('SVG data set in service:', data);
+			console.log("app.component.ts: getSvgData() called");
+			this.appService.changeSvg(data);
+
+		},
+		(error)=>{
+			console.log("error loading svg data "+ error);
+		});
 	}
 
 	handleProjectCreate(projectName: string) {

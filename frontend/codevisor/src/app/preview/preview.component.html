@@ -1,5 +1,4 @@
-    <div class="image-container">
-        <img   [src]="svgImageDataUri" alt="Lights"  />
-
+<div class="image-container" >  
+        <svg [innerHTML]="getSafeHtml(svgText)"></svg>
 </div>
 
