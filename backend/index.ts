@@ -52,7 +52,7 @@ app.put("/v1/chart", (request, response) => {
 
 				const headers = {
 					"Content-Type": "application/json",
-					"Authorization": `${AUTH}`
+					"Authorization": `Bearer ${AUTH}`
 				}
 
 				const body = {

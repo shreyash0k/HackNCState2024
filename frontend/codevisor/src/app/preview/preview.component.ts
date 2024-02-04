@@ -1,56 +1,51 @@
-import { Component ,inject, OnInit,AfterViewInit, ElementRef, ViewChild  } from '@angular/core';
-import { DomSanitizer,SafeHtml } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, Input } from '@angular/core';
+//import mat-card
 import {MatCardModule} from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
-import { AppServiceService } from "../app-service.service";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
-
-
-
-
+import { Project } from '../common/project';
 
 
 @Component({
   selector: 'app-preview',
   standalone: true,
-  imports: [MatCardModule,HttpClientModule, MatProgressSpinnerModule,CommonModule], 
+  imports: [CommonModule, HttpClientModule, MatCardModule],
   templateUrl: './preview.component.html',
   styleUrl: './preview.component.css'
 })
+export class PreviewComponent {
+  _project: Project | null = null;
+  httpClient = inject(HttpClient);
+  svgText: string | null = null;
 
-export class PreviewComponent implements OnInit{
-     svgText:string = '';
-     isLoading =1;
-  constructor(private sanitizer: DomSanitizer,private appService: AppServiceService) {
-
+  get project(): Project | null {
+    return this._project;
   }
 
+  @Input()
+  set project(project: Project | null) {
+    this._project = project;
 
-  ngOnInit(): void {
-
-
-    this.appService.currentSvg.subscribe(svg =>{
-      
-
-     
-        this.svgText = svg;
-        this.getSafeHtml(this.svgText);
-        this.isLoading = 0;
-
-      
-      
-
-
-    } );
-
-   
-   
-  }
-  getSafeHtml(svgText: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(svgText);
-
+    if (project == null) {
+      this.svgText = null;
+    } else {
+      this.httpClient
+        .put("http://localhost:3000/v1/chart", {
+          "project_id": project.project_id,
+          "code": project.code,
+        }, {
+          responseType: "text"
+        })
+        .subscribe(response => this.svgText = response.toString());
+    }
   }
 
-  
+  getSVGImageDataURI(): string | null {
+    if (this.svgText == null) {
+      return null;
+    }
+
+    return `data:image/svg+xml;base64,${btoa(this.svgText)}`;
+  }
 }

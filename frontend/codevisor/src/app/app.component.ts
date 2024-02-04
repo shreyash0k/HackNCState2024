@@ -27,7 +27,8 @@ export class AppComponent implements OnInit {
 	@ViewChild(EditorComponent) editor: EditorComponent | null = null;
 	menuEnabled = false;
 	projects: Project[] = [];
-	selectedProject: Project = this.projects[0];
+	selectedProject: Project | null = null;
+	selectedProjectForVisualization: Project | null = null;
 
 	constructor(private httpClient: HttpClient) {}
 
@@ -38,7 +39,18 @@ export class AppComponent implements OnInit {
 			const code = this.editor.getValue();
 
 			if (code != null) {
-				console.log(`Code: ${code}`);
+				for (let i = 0; i < this.projects.length; i++) {
+					const newProject = {...this.projects[i]};
+
+					if (this.projects[i] == this.selectedProject) {
+						newProject.code = code;
+
+						this.selectedProject = newProject;
+						this.selectedProjectForVisualization = newProject;
+					}
+
+					this.projects[i] = newProject;
+				}
 			}
 		}
 	}
@@ -55,6 +67,7 @@ export class AppComponent implements OnInit {
 
 	handleProjectSelect(project: Project) {
 		this.selectedProject = project;
+		this.selectedProjectForVisualization = null;
 		this.menuEnabled = false;
 	}
 
@@ -65,6 +78,7 @@ export class AppComponent implements OnInit {
 			} else {
 				this.projects = response.projects as Project[];
 				this.projects.sort((project1, project2) => project2.timestamp - project1.timestamp);
+				this.selectedProject = this.projects[0];
 			}
 		});
 	}
