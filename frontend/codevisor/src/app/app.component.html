@@ -1,7 +1,7 @@
-<app-header/>
+<app-header (generate)="generate()"/>
 <as-split>
 	<as-split-area [size]="50">
-		<editor/>
+		<editor #editor/>
 	</as-split-area>
 
 	<as-split-area [size]="50">

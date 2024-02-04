@@ -1,3 +1,9 @@
-<mat-toolbar>
-	<span>CodeVisor</span>
+<mat-toolbar color="primary">
+	<span class="toolbar-title">CodeVisor</span>
+	<span class="toolbar-filler"></span>
+	<button
+		color="accent"
+		mat-raised-button
+		matTooltip="Generate a flowchart"
+		(click)="generate.emit(null)">Generate</button>
 </mat-toolbar>
