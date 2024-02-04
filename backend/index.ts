@@ -29,14 +29,14 @@ app.put("/v1/chart", (request, response) => {
 
 
 	const {project_id} = request.body;
-	
+
 	const code = request.body.code.toString();
 
 	const codeHash = crypto.createHash('sha256').update(code).digest('hex');
 
 	const checkForHash = async () => {
 		const client = new MongoClient(mongoUrl);
-		try{ 
+		try{
 			await client.connect();
 			const db = client.db(mongodbName);
 			const collection = db.collection(mongoCollectionName);
@@ -49,7 +49,7 @@ app.put("/v1/chart", (request, response) => {
 			}
 			else{
 				const uri = "https://api.openai.com/v1/chat/completions";
-	
+
 				const headers = {
 					"Content-Type": "application/json",
 					"Authorization": `${AUTH}`
@@ -85,7 +85,7 @@ app.put("/v1/chart", (request, response) => {
 								hash: crypto.createHash('sha256').update(code).digest('hex')
 							}
 						};
-						
+
 						const updateResult = await collection.updateOne(filter,updateDoc);
 						response
 							.type('svg')
@@ -110,7 +110,7 @@ app.post("/v1/projects", (request, response) => {
 	const {project_name} = request.body;
 	const project_id = crypto.randomUUID();
 	const code = "";
-	const chart_svg = "";
+	const chart_svg = null;
 	const hash = "";
 	const timestamp = Date.now();
 
