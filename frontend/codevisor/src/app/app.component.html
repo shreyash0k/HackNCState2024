@@ -1,7 +1,10 @@
 <app-header (generate)="generate()" (toggleMenu)="menuEnabled = !menuEnabled"/>
 <mat-sidenav-container class="menu-container">
 	<mat-sidenav class="menu" [(opened)]="menuEnabled">
-		<project-list [projects]="projects" (select)="handleProjectSelect($event)"/>
+		<project-list
+			[projects]="projects"
+			(create)="handleProjectCreate($event)"
+			(select)="handleProjectSelect($event)"/>
 	</mat-sidenav>
 
 	<mat-sidenav-content>

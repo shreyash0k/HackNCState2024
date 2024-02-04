@@ -1,3 +1,17 @@
+:host {
+	display: block;
+	height: 100%;
+	position: relative;
+}
+
+.create-project-button {
+	position: absolute;
+	right: 1rem;
+	bottom: 1rem;
+	width: 4rem;
+	height: 4rem;
+}
+
 .project-name {
 	margin: 0 0 -0.5rem 0;
 }

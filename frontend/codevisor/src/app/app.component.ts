@@ -65,6 +65,16 @@ export class AppComponent {
 		}
 	}
 
+	handleProjectCreate(projectName: string) {
+		this.projects.unshift({
+			project_id: this.projects.length.toString(),
+			project_name: projectName,
+			code: "",
+			chart_svg: "",
+			timestamp: 0
+		})
+	}
+
 	handleProjectSelect(project: Project) {
 		this.selectedProject = project;
 		this.menuEnabled = false;

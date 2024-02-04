@@ -4,3 +4,10 @@
 		<small class="project-timestamp">{{ getProjectCreatedPhrase(project) }}</small>
 	</button>
 </mat-action-list>
+
+<button
+	class="create-project-button"
+	mat-fab
+	(click)="handleCreateProjectButtonClick()">
+	<mat-icon>add</mat-icon>
+</button>
