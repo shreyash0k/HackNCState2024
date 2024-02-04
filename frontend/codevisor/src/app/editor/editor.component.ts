@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
 import { editor } from "monaco-editor"
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
-import { EditorImportOverlayComponent } from "./importoverlay/importoverlay.component";
+import { EditorImportOverlayComponent } from "./import/overlay/importoverlay.component";
 
 @Component({
 	selector: "editor",
