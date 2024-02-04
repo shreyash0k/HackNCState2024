@@ -14,8 +14,14 @@
 	height: 100%;
 }
 
-.editor-import-overlay-hidden {
+.hidden {
 	display: none;
+}
+
+.primary-editor-file-import-button {
+	right: 1.75rem;
+	bottom: 1rem;
+	position: absolute;
 }
 
 .monaco-editor {

@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
 import { editor } from "monaco-editor"
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
+import { EditorFileImportButtonComponent } from "./import/fileimportbutton/fileimportbutton.component";
 import { EditorImportOverlayComponent } from "./import/overlay/importoverlay.component";
 
 @Component({
 	selector: "editor",
 	standalone: true,
-	imports: [EditorImportOverlayComponent, MonacoEditorModule],
+	imports: [EditorFileImportButtonComponent, EditorImportOverlayComponent, MonacoEditorModule],
 	styleUrl: "./editor.component.scss",
 	templateUrl: "./editor.component.html"
 })

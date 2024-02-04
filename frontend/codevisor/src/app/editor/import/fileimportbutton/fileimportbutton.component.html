@@ -1,0 +1,13 @@
+<input
+	type="file"
+	class="file-input"
+	(change)="handleAttachedFile()"
+	#fileInput>
+
+<button
+	mat-fab
+	[style.width]="width ?? ''"
+	[style.height]="height ?? ''"
+	(click)="handleAttachFileButtonClick()">
+	<mat-icon>attach_file</mat-icon>
+</button>
