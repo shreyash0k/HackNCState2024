@@ -44,13 +44,13 @@ export class AppComponent implements OnInit {
 	}
 
 	handleProjectCreate(projectName: string) {
-		this.projects.unshift({
-			project_id: this.projects.length.toString(),
-			project_name: projectName,
-			code: "",
-			chart_svg: "",
-			timestamp: 0
-		})
+		this.httpClient
+			.post("http://localhost:3000/v1/projects", {
+				project_name: projectName
+			})
+			.subscribe(response => {
+				this.projects.unshift(response as Project);
+			});
 	}
 
 	handleProjectSelect(project: Project) {
