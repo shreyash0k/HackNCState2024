@@ -8,6 +8,7 @@ import { PreviewComponent } from "./preview/preview.component";
 	selector: "app-root",
 	standalone: true,
 	imports: [AngularSplitModule, EditorComponent, HeaderComponent, PreviewComponent],
+	styleUrl: "./app.component.scss",
 	templateUrl: "./app.component.html"
 })
 export class AppComponent {
@@ -19,9 +20,7 @@ export class AppComponent {
 		} else {
 			const code = this.editor.getValue();
 
-			if (code == null) {
-				console.error("Error: Didn't get any code from the editor");
-			} else {
+			if (code != null) {
 				console.log(`Code: ${code}`);
 			}
 		}

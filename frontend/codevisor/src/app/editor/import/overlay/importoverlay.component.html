@@ -1,0 +1,15 @@
+<editor-file-import-button
+	class="editor-import-overlay-button"
+	width="5rem"
+	height="5rem"
+	(import)="handleAttachedFile($event)"/>
+
+<div [matTooltip]="pasteEnabled ? '' : 'Unsupported'">
+	<button
+		class="editor-import-overlay-button"
+		mat-fab
+		[disabled]="!pasteEnabled"
+		(click)="handlePasteButtonClick()">
+		<mat-icon>content_paste</mat-icon>
+	</button>
+</div>
