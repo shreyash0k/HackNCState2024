@@ -1,4 +1,10 @@
 <ngx-monaco-editor
 	class="monaco-editor"
 	[options]="monacoOptions"
-	(onInit)="onInit($event)"/>
+	(onInit)="handleInit($event)"/>
+
+<editor-import-overlay
+	class="editor-import-overlay"
+	[class.editor-import-overlay-hidden]="!overlayEnabled"
+	(hide)="handleImportOverlayHide()"
+	(paste)="handlePaste($event)"/>
