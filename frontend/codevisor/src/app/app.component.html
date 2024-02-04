@@ -1,10 +1,25 @@
-<app-header (generate)="generate()"/>
-<as-split class="body">
-	<as-split-area [size]="50">
-		<editor #editor/>
-	</as-split-area>
+<app-header
+	[project]="selectedProject"
+	(generate)="generate()"
+	(toggleMenu)="menuEnabled = !menuEnabled"/>
 
-	<as-split-area [size]="50">
-		<app-preview/>
-	</as-split-area>
-</as-split>
+<mat-sidenav-container class="menu-container">
+	<mat-sidenav class="menu" [(opened)]="menuEnabled">
+		<project-list
+			[projects]="projects"
+			(create)="handleProjectCreate($event)"
+			(select)="handleProjectSelect($event)"/>
+	</mat-sidenav>
+
+	<mat-sidenav-content>
+		<as-split class="body">
+			<as-split-area [size]="50">
+				<editor [project]="selectedProject" #editor/>
+			</as-split-area>
+
+			<as-split-area [size]="50">
+				<app-preview/>
+			</as-split-area>
+		</as-split>
+	</mat-sidenav-content>
+</mat-sidenav-container>

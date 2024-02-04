@@ -1,0 +1,13 @@
+<mat-action-list>
+	<button mat-list-item *ngFor="let project of projects" (click)="select.emit(project)">
+		<p class="project-name">{{ project.project_name }}</p>
+		<small class="project-timestamp">{{ getProjectCreatedPhrase(project) }}</small>
+	</button>
+</mat-action-list>
+
+<button
+	class="create-project-button"
+	mat-fab
+	(click)="handleCreateProjectButtonClick()">
+	<mat-icon>add</mat-icon>
+</button>
