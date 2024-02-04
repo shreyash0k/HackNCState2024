@@ -2,13 +2,19 @@ import express from "express";
 import axios from "axios";
 import { renderDOTToSVG } from "./renderer";
 
-const cors = require("cors");
 const app = express();
 const port = 3000;
 const AUTH = process.env.OPEN_AI_AUTH;
 
 app.use(express.text());
-app.use(cors)
+
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.post("/v1/post/chart", (request, response) => {
 	const query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
