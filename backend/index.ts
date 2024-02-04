@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 });
 
 //need to update //PUT //get ID, code
-app.post("/v1/put/chart", (request, response) => {
+app.put("/v1/put/chart", (request, response) => {
 	const gpt_query = "Please generate Graphviz code for a flowchart explaining the program below. Try to avoid including code in the flowchart. Instead, make it easily understandable with English explanations. Don't include any explanation in your response; rather, just generate the Graphviz code.\n"
 
 
