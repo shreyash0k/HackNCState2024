@@ -1,4 +1,10 @@
-<button class="editor-import-overlay-button" mat-fab>
+<input
+	type="file"
+	class="file-input"
+	(change)="handleAttachedFile()"
+	#fileInput>
+
+<button class="editor-import-overlay-button" mat-fab (click)="handleAttachFileButtonClick()">
 	<mat-icon>attach_file</mat-icon>
 </button>
 

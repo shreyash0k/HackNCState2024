@@ -25,6 +25,12 @@ export class EditorComponent {
 		return this.model == null ? null : this.model.getValue();
 	}
 
+	handleImport(text: string) {
+		if (this.model != null) {
+			this.model.setValue(text);
+		}
+	}
+
 	handleImportOverlayHide() {
 		this.overlayEnabled = false;
 	}
@@ -43,12 +49,6 @@ export class EditorComponent {
 				this.overlayEnabled = true;
 				this.changeDetectorRef.detectChanges();
 			}
-		}
-	}
-
-	handlePaste(text: string) {
-		if (this.model != null) {
-			this.model.setValue(text);
 		}
 	}
 }

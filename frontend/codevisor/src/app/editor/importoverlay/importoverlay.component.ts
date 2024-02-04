@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
@@ -12,7 +12,8 @@ import { MatIconModule } from "@angular/material/icon";
 })
 export class EditorImportOverlayComponent {
 	@Output() hide = new EventEmitter<null>();
-	@Output() paste = new EventEmitter<string>();
+	@Output() import = new EventEmitter<string>();
+	@ViewChild("fileInput") fileInput: ElementRef<HTMLInputElement> | null = null;
 	pasteEnabled = true;
 
 	constructor() {
@@ -36,18 +37,49 @@ export class EditorImportOverlayComponent {
 
 				this.pasteEnabled = false;
 			}
-		})()
+		})();
+	}
+
+	handleAttachedFile() {
+		if (this.fileInput == null) {
+			return;
+		}
+
+		const files = this.fileInput.nativeElement.files;
+
+		if (files == null) {
+			return;
+		}
+
+		const fileReader = new FileReader();
+
+		fileReader.addEventListener("load", () => {
+			const result = fileReader.result;
+
+			if (typeof result == "string") {
+				this.import.emit(result);
+				this.hide.emit(null);
+			}
+		})
+
+		fileReader.readAsText(files[0]);
+	}
+
+	handleAttachFileButtonClick() {
+		if (this.fileInput != null) {
+			this.fileInput.nativeElement.click();
+		}
 	}
 
 	@HostListener("click", ["$event.currentTarget", "$event.target"])
-	onClick(currentTarget: EventTarget, target: EventTarget) {
+	handleClick(currentTarget: EventTarget, target: EventTarget) {
 		if (currentTarget == target) {
 			this.hide.emit(null);
 		}
 	}
 
 	async handlePasteButtonClick() {
-		this.paste.emit(await navigator.clipboard.readText());
+		this.import.emit(await navigator.clipboard.readText());
 		this.hide.emit(null);
 	}
 }
