@@ -1,4 +1,8 @@
 <mat-toolbar color="primary">
+	<button class="toolbar-menu-icon" mat-icon-button (click)="toggleMenu.emit(null)">
+		<mat-icon>menu</mat-icon>
+	</button>
+
 	<span class="toolbar-title">CodeVisor</span>
 	<span class="toolbar-filler"></span>
 	<button
