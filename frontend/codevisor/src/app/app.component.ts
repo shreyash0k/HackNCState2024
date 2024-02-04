@@ -1,4 +1,4 @@
-import { Component, ViewChild,inject } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { AngularSplitModule } from "angular-split";
 import { Project } from "./common/project";
@@ -6,9 +6,7 @@ import { EditorComponent } from "./editor/editor.component";
 import { HeaderComponent } from "./layout/header/header.component";
 import { PreviewComponent } from "./preview/preview.component";
 import { ProjectListComponent } from "./projectlist/projectlist.component";
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
-import { AppServiceService } from "./app-service.service";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
 	selector: "app-root",
@@ -25,43 +23,15 @@ import { AppServiceService } from "./app-service.service";
 	styleUrl: "./app.component.scss",
 	templateUrl: "./app.component.html"
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 	@ViewChild(EditorComponent) editor: EditorComponent | null = null;
 	menuEnabled = false;
-	projects = [
-		{
-			project_id: "0",
-			project_name: "Test Project #1",
-			code: 'console.log("Project 1!");',
-			chart_svg: "",
-			timestamp: 0
-		},
+	projects: Project[] = [];
+	selectedProject: Project | null = null;
+	selectedProjectForVisualization: Project | null = null;
 
-		{
-			project_id: "1",
-			project_name: "Test Project #2",
-			code: 'console.log("Project 2!");',
-			chart_svg: "",
-			timestamp: 0
-		},
+	constructor(private httpClient: HttpClient) {}
 
-		{
-			project_id: "2",
-			project_name: "Test Project #3",
-			code: 'console.log("Project 3!");',
-			chart_svg: "",
-			timestamp: 0
-		}
-	];
-
-	selectedProject: Project = this.projects[0];
-	httpClient = inject(HttpClient);
-	apiUrl = 'http://localhost:3000/v1/post/chart';
-
-
-	constructor(private appService: AppServiceService) {
-		
-	}
 	generate() {
 		if (this.editor == null) {
 			console.error("Error: The editor hasn't been registered yet.");
@@ -69,42 +39,47 @@ export class AppComponent {
 			const code = this.editor.getValue();
 
 			if (code != null) {
-				console.log(`Code: ${code}`);
-				this.getSvgData(code);
+				for (let i = 0; i < this.projects.length; i++) {
+					const newProject = {...this.projects[i]};
+
+					if (this.projects[i] == this.selectedProject) {
+						newProject.code = code;
+
+						this.selectedProject = newProject;
+						this.selectedProjectForVisualization = newProject;
+					}
+
+					this.projects[i] = newProject;
+				}
 			}
 		}
-		//call getSvgfunction to get the svg
-		
-
-		//return that svg to the preview component
-	}
-	
-
-	getSvgData(inputCode:any){
-		this.httpClient.post<any>(this.apiUrl, inputCode, {responseType: 'text' as 'json'})
-		.subscribe((data:any)=>{
-			console.log('SVG data set in service:', data);
-			console.log("app.component.ts: getSvgData() called");
-			this.appService.changeSvg(data);
-
-		},
-		(error)=>{
-			console.log("error loading svg data "+ error);
-		});
 	}
 
 	handleProjectCreate(projectName: string) {
-		this.projects.unshift({
-			project_id: this.projects.length.toString(),
-			project_name: projectName,
-			code: "",
-			chart_svg: "",
-			timestamp: 0
-		})
+		this.httpClient
+			.post("http://localhost:3000/v1/projects", {
+				project_name: projectName
+			})
+			.subscribe(response => {
+				this.projects.unshift(response as Project);
+			});
 	}
 
 	handleProjectSelect(project: Project) {
 		this.selectedProject = project;
+		this.selectedProjectForVisualization = null;
 		this.menuEnabled = false;
+	}
+
+	ngOnInit() {
+		this.httpClient.get("http://localhost:3000/v1/projects").subscribe(response => {
+			if (!("projects" in response)) {
+				console.log('Error: Expected a "projects" in the response body.');
+			} else {
+				this.projects = response.projects as Project[];
+				this.projects.sort((project1, project2) => project2.timestamp - project1.timestamp);
+				this.selectedProject = this.projects[0];
+			}
+		});
 	}
 }

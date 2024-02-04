@@ -1,4 +1,4 @@
-<div class="image-container" >  
-        <svg [innerHTML]="getSafeHtml(svgText)"></svg>
-</div>
+    <div class="image-container">
+        <img   [src]="getSVGImageDataURI()" alt="Lights" *ngIf="getSVGImageDataURI() != null" />
 
+</div>
