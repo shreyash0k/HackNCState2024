@@ -1,25 +1,26 @@
-import express from "express";
 import axios from "axios";
 import crypto from "crypto";
+import "dotenv/config";
+import express from "express";
+import { MongoClient } from "mongodb";
 import { renderDOTToSVG } from "./renderer";
-const { MongoClient } = require('mongodb');
 
 const app = express();
 const port = 3000;
 const AUTH = process.env.OPEN_AI_AUTH;
 
-const mongoUrl = 'mongodb://localhost:27017'
-const mongodbName = 'projects_db';
-const mongoCollectionName = 'projects'
+const mongoDbUrl = process.env.MONGODB_URL!;
+const mongoDbDatabaseName = process.env.MONGODB_DATABASE_NAME!;
+const mongoDbCollectionName = process.env.MONGODB_COLLECTION_NAME!;
 
 app.use(express.text());
 app.use(express.json());
 
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
 
@@ -32,19 +33,19 @@ app.put("/v1/chart", (request, response) => {
 
 	const code = request.body.code.toString();
 
-	const codeHash = crypto.createHash('sha256').update(code).digest('hex');
+	const codeHash = crypto.createHash("sha256").update(code).digest("hex");
 
 	const checkForHash = async () => {
-		const client = new MongoClient(mongoUrl);
+		const client = new MongoClient(mongoDbUrl);
 		try{
 			await client.connect();
-			const db = client.db(mongodbName);
-			const collection = db.collection(mongoCollectionName);
+			const db = client.db(mongoDbDatabaseName);
+			const collection = db.collection(mongoDbCollectionName);
 			const query = {hash : codeHash};
 			const document = await collection.findOne(query);
 			if(document&&codeHash){
 				response
-					.type('svg')
+					.type("svg")
 					.send(document.chart_svg);
 			}
 			else{
@@ -82,18 +83,18 @@ app.put("/v1/chart", (request, response) => {
 							$set: {
 								code,
 								chart_svg: svgContent,
-								hash: crypto.createHash('sha256').update(code).digest('hex')
+								hash: crypto.createHash("sha256").update(code).digest("hex")
 							}
 						};
 
 						const updateResult = await collection.updateOne(filter,updateDoc);
 						response
-							.type('svg')
+							.type("svg")
 							.send(svgContent);
 					}
 					catch(error) {
-							console.error('Failed to fetch SVG:', error);
-							response.status(500).send('Failed to load SVG content');
+							console.error("Failed to fetch SVG:", error);
+							response.status(500).send("Failed to load SVG content");
 					}
 				})
 			}
@@ -115,11 +116,11 @@ app.post("/v1/projects", (request, response) => {
 	const timestamp = Date.now();
 
 	const createProject = async() => {
-		const client = new MongoClient(mongoUrl);
+		const client = new MongoClient(mongoDbUrl);
 		try{
 			await client.connect();
-			const db = client.db(mongodbName);
-			const collection = db.collection(mongoCollectionName);
+			const db = client.db(mongoDbDatabaseName);
+			const collection = db.collection(mongoDbCollectionName);
 
 			const insertResult = await collection.insertOne({
 				project_id,
@@ -151,11 +152,11 @@ app.post("/v1/projects", (request, response) => {
 app.get("/v1/projects", (_, response) => {
 
 	const fetchProjects = async() => {
-		const client = new MongoClient(mongoUrl);
+		const client = new MongoClient(mongoDbUrl);
 		try{
 			await client.connect();
-			const db = client.db(mongodbName);
-			const collection = db.collection(mongoCollectionName);
+			const db = client.db(mongoDbDatabaseName);
+			const collection = db.collection(mongoDbCollectionName);
 
 			const fetchResult = await collection.find({}).toArray();
 			response.json({"projects": [...fetchResult]});
