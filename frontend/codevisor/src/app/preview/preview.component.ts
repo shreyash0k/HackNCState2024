@@ -32,7 +32,7 @@ export class PreviewComponent {
     } else {
       this.httpClient
         .put("http://localhost:3000/v1/chart", {
-          "project_id": project.project_id,
+          "projectId": project.projectId,
           "code": project.code,
         }, {
           responseType: "text"

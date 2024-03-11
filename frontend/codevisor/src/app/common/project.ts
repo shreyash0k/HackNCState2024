@@ -1,7 +1,7 @@
 export type Project = {
-	project_id: string,
-	project_name: string,
+	projectId: string,
+	projectName: string,
 	code: string,
-	chart_svg: string | null,
+	chartSvg: string | null,
 	timestamp: number
 }
