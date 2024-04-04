@@ -8,10 +8,6 @@ We architected CodeVisor with familiar websites like CodePen and JSFiddle in min
 
 We began by experimenting with different pipelines, first asking GPT to generate an image with DALL-E, then asking it to write LaTeX code, and eventually settling on a format called Graphviz that produced the kind of high-accuracy flowcharts we were satisfied with. In its final iteration, the product feeds the user's code to GPT, requesting a Graphviz file containing the nodes, edges, and styles that comprise the end-result. Graphviz offered many advantages for us, since the format is straightforward for GPT to understand and gives it less control over complicated typesetting features that it's likely to misapply.
 
-## Screenshots
-
-![App Screenshot](https://drive.google.com/file/d/1ZzvwgmJkPuxI8jKqxx_uaU_DByZhrR1-/view?usp=sharing)
-
 
 ## Demo
 
