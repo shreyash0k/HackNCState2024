@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
 	handleProjectCreate(projectName: string) {
 		this.httpClient
 			.post("http://localhost:3000/v1/projects", {
-				project_name: projectName
+				projectName
 			})
 			.subscribe(response => {
 				this.projects.unshift(response as Project);
